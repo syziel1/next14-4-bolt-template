@@ -29,7 +29,7 @@ export function createClient() {
         },
         remove(name: string, options: CookieOptions) {
           try {
-            cookieStore.set({ name, value: '', ...options })
+            cookieStore.delete(name)
           } catch (error) {
           }
         },
