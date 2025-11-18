@@ -24,13 +24,14 @@ export function createClient() {
           try {
             cookieStore.set({ name, value, ...options })
           } catch (error) {
-            // Ignore errors in Server Components
+            // Server Components can't modify cookies; cookie setting should be handled by Route Handlers or Server Actions.
           }
         },
         remove(name: string, options: CookieOptions) {
           try {
             cookieStore.delete(name)
           } catch (error) {
+            // Server Components can't modify cookies; cookie removal should be handled by Route Handlers or Server Actions.
           }
         },
       },
