@@ -28,14 +28,21 @@ export function createClient() {
             cookieStore.set({ name, value, ...options })
           } catch (error) {
             // Server Components can't modify cookies; cookie setting should be handled by Route Handlers or Server Actions.
+            // Log error for debugging purposes while suppressing expected Server Component errors
+            if (process.env.NODE_ENV === 'development') {
+              console.warn('Cookie set operation failed:', error)
+            }
           }
         },
         remove(name: string, options: CookieOptions) {
           try {
             cookieStore.delete({ name, ...options })
           } catch (error) {
-            // Ignore errors in Server Components
             // Server Components can't modify cookies; cookie removal should be handled by Route Handlers or Server Actions.
+            // Log error for debugging purposes while suppressing expected Server Component errors
+            if (process.env.NODE_ENV === 'development') {
+              console.warn('Cookie remove operation failed:', error)
+            }
           }
         },
       },
