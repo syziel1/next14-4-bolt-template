@@ -1,5 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 
+export const dynamic = "force-dynamic";
+
 // 1. Type definition (used below in the .returns<Motto[]>() query)
 interface Motto {
   id: number;
