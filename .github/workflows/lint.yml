@@ -1,0 +1,29 @@
+name: Lint Code
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    # Uruchamiaj na każdym PR do main
+    branches: ["main"]
+
+jobs:
+  lint-code: # <--- To jest ID, na które czeka Twój GitHub
+    name: lint-code # <--- To nazwa wyświetlana (musi pasować do Branch Protection)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Linter
+        run: npm run lint
