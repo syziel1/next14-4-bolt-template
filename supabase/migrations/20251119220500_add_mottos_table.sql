@@ -4,7 +4,7 @@ create table if not exists public.mottos (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   language text not null,
   content text not null,
-  author text not null,
+  author text not null
 
   -- Constraints to ensure data quality
   constraint mottos_unique_language_content unique (language, content), -- Prevents duplicate quotes in the same language
