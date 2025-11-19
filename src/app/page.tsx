@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 
-// 1. Definicja typu (użyta poniżej w zapytaniu .returns<Motto[]>())
+// 1. Type definition (used below in the .returns<Motto[]>() query)
 interface Motto {
   id: number;
   created_at: string;
