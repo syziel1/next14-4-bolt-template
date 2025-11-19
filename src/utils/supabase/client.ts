@@ -10,7 +10,7 @@ export function createClient() {
     throw new Error(`Missing environment variable(s): ${missingVars.join(', ')}.`);
   }
   return createBrowserClient(
-    url,
-    anonKey
+    url!,
+    anonKey!
   );
 }
