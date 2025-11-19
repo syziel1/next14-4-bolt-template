@@ -50,7 +50,7 @@ export default async function Home() {
 
         {error ? (
           <div className="text-sm text-destructive bg-destructive/10 p-4 rounded border border-destructive/20">
-            <p className="font-semibold mb-2">Błąd: {error.message}</p>
+            <p className="font-semibold mb-2">Error: {error.message}</p>
             
             {isDev ? (
               <>
