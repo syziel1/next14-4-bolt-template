@@ -64,7 +64,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
               </>
             ) : (
               <p className="text-muted-foreground text-xs">
-                Aplikacja działa w trybie <strong>PROD</strong>. Sprawdź konfigurację zmiennych środowiskowych w panelu hostingu.
+                The application is running in <strong>PROD</strong> mode. Check your environment variable configuration in your hosting panel.
               </p>
             )}
           </div>
