@@ -29,7 +29,7 @@ export function createClient() {
         },
         remove(name: string, options: CookieOptions) {
           try {
-            cookieStore.delete(name)
+            cookieStore.delete({ name, ...options })
           } catch (error) {
             // Server Components can't modify cookies; cookie removal should be handled by Route Handlers or Server Actions.
           }
