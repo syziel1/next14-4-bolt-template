@@ -55,7 +55,7 @@ export default async function Home() {
             {isDev ? (
               <>
                 <p className="mb-2 text-muted-foreground text-xs">
-                  Jesteś w trybie <strong>DEV</strong>. Upewnij się, że masz plik <code className="bg-background px-1 py-0.5 rounded border">.env</code> w głównym katalogu:
+                  You are in <strong>DEV</strong> mode. Make sure you have a <code className="bg-background px-1 py-0.5 rounded border">.env</code> file in the root directory:
                 </p>
                 <pre className="p-3 bg-slate-950 text-slate-50 rounded-md overflow-x-auto text-xs font-mono">
 NEXT_PUBLIC_SUPABASE_URL=your-project-url
