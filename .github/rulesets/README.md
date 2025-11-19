@@ -23,23 +23,15 @@ This ruleset protects the main/default branch with the following rules:
 
 The `required_status_checks` section specifies which CI/CD checks must pass before merging. The configuration uses only the `context` name, making it portable across different repositories and GitHub App installations.
 
-If you need to restrict status checks to a specific GitHub App installation, you can add an `integration_id` field:
+If you need to restrict status checks to a specific GitHub App installation, you can add an `integration_id` field (where `integration_id` refers to the GitHub App's installation ID as shown in GitHub's API and UI):
 
 ```json
 "required_status_checks": [
   {
     "context": "lint-code",
-    "integration_id": 12345
+    "integration_id": 12345 // This is the GitHub App's installation ID
   }
 ]
-```
-
-To find your GitHub App's integration ID:
-1. Go to your repository Settings → Integrations & apps
-2. Click on the GitHub App to view its details.
-3. The integration ID will be shown in the app details, or you can find it by inspecting the check run details in a pull request (look for `installation_id` in the API response or UI).
-   For organization-level installations, the integration ID may appear in the installation URL, but for repository-specific installations, use the repository's settings or check run details.
-**Note**: Using `integration_id` makes the ruleset environment-specific and requires updating when moving to different repositories or organizations.
 
 ### Importing the Ruleset
 
