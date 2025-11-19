@@ -1,7 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 
-// W przyszłości, gdy skonfigurujesz `supabase gen types`, zastąpisz ten ręczny interfejs
-// importem z wygenerowanego pliku, np.: import { Database } from '@/types/supabase';
+// 1. Definicja typu (użyta poniżej w zapytaniu .returns<Motto[]>())
 interface Motto {
   id: number;
   created_at: string;
@@ -13,13 +12,14 @@ interface Motto {
 export default async function Home() {
   const supabase = createClient();
   
-  // Sprawdzamy tryb środowiska (development vs production)
   const isDev = process.env.NODE_ENV === 'development';
 
+  // 2. Pobranie danych z jawnym typowaniem
   const { data: mottos, error } = await supabase
     .from("mottos")
     .select("*")
-    .limit(3);
+    .limit(3)
+    .returns<Motto[]>(); // <--- TUTAJ używamy interfejsu, naprawiając błąd lintera
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-background px-6 text-center text-foreground">
@@ -47,7 +47,6 @@ export default async function Home() {
             <p className="font-semibold mb-2">Błąd: {error.message}</p>
             
             {isDev ? (
-              // Instrukcje widoczne TYLKO w trybie deweloperskim (localhost)
               <>
                 <p className="mb-2 text-muted-foreground text-xs">
                   Jesteś w trybie <strong>DEV</strong>. Upewnij się, że masz plik <code className="bg-background px-1 py-0.5 rounded border">.env</code> w głównym katalogu:
@@ -58,9 +57,8 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=twoj-klucz
                 </pre>
               </>
             ) : (
-              // Komunikat dla wersji produkcyjnej (np. Vercel)
               <p className="text-muted-foreground text-xs">
-                Aplikacja działa w trybie <strong>PROD</strong>. Sprawdź konfigurację zmiennych środowiskowych (Environment Variables) w panelu swojego hostingu.
+                Aplikacja działa w trybie <strong>PROD</strong>. Sprawdź konfigurację zmiennych środowiskowych w panelu hostingu.
               </p>
             )}
           </div>
@@ -70,9 +68,10 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=twoj-klucz
               Ostatnio dodane motta:
             </p>
             <ul className="space-y-3">
+              {/* Teraz TypeScript wie, że 'motto' ma pole .content, .author itp. */}
               {mottos?.map((motto) => (
                 <li key={motto.id} className="rounded border bg-muted/30 p-3 text-sm">
-                  <p className="italic mb-1">"{motto.content}"</p>
+                  <p className="italic mb-1">&quot;{motto.content}&quot;</p>
                   <div className="flex justify-between items-center text-xs text-muted-foreground">
                     <span className="font-semibold text-primary">{motto.author}</span>
                     <span className="uppercase border px-1 rounded text-[10px]">{motto.language}</span>
@@ -82,7 +81,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=twoj-klucz
             </ul>
             {(!mottos || mottos.length === 0) && (
               <p className="text-sm text-yellow-600 bg-yellow-50 p-2 rounded border border-yellow-200">
-                Połączono, ale tabela "mottos" jest pusta. Uruchom migrację SQL, aby dodać przykładowe dane.
+                Połączono, ale tabela &quot;mottos&quot; jest pusta. Uruchom migrację SQL.
               </p>
             )}
           </div>
