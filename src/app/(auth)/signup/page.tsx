@@ -38,6 +38,17 @@ export default function SignUpPage() {
         <CardContent>
           <form action={handleSubmit} className="space-y-4">
             <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Your name"
+                required
+                disabled={isPending}
+              />
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"

@@ -16,9 +16,12 @@ export default async function Home() {
   let error: { message: string } | null = null;
   const isDev = process.env.NODE_ENV === 'development';
 
+  // Get user session
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   // Get a random motto from the database
   try {
-    const supabase = createClient();
     // PostgREST does not allow functions inside order(). Instead we grab a count,
     // pick a random offset, and fetch a single row ordered by a stable column.
     const { count, error: countError } = await supabase
@@ -49,12 +52,25 @@ export default async function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between gap-6 bg-background px-6 py-8 text-center text-foreground">
       <div className="flex-1 flex flex-col items-center justify-center gap-6 w-full">
       <div className="space-y-2">
-        <h1 className="text-balance text-4xl font-bold sm:text-5xl">
-          Next 14.x with Supabase template ⚡
-        </h1>
-        <h2 className="text-balance text-2xl font-semibold sm:text-3xl">
-          Also for Bolt.new projects
-        </h2>
+        {user ? (
+          <>
+            <h1 className="text-balance text-4xl font-bold sm:text-5xl">
+              Witaj, {user.user_metadata?.full_name || user.email?.split('@')[0]}! 👋
+            </h1>
+            <h2 className="text-balance text-2xl font-semibold sm:text-3xl text-muted-foreground">
+              Miło Cię widzieć
+            </h2>
+          </>
+        ) : (
+          <>
+            <h1 className="text-balance text-4xl font-bold sm:text-5xl">
+              Next 14.x with Supabase template ⚡
+            </h1>
+            <h2 className="text-balance text-2xl font-semibold sm:text-3xl">
+              Also for Bolt.new projects
+            </h2>
+          </>
+        )}
       </div>
 
       <div className="mt-4 w-full max-w-md rounded-lg border bg-card p-6 shadow-sm text-left">

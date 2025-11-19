@@ -30,11 +30,12 @@ export async function signIn(formData: FormData) {
 export async function signUp(formData: FormData) {
   const supabase = await createClient()
 
+  const name = formData.get('name') as string
   const email = formData.get('email') as string
   const password = formData.get('password') as string
 
-  if (!email || !password) {
-    return { error: 'Email and password are required' }
+  if (!name || !email || !password) {
+    return { error: 'Name, email and password are required' }
   }
 
   if (password.length < 6) {
@@ -46,6 +47,9 @@ export async function signUp(formData: FormData) {
     password,
     options: {
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      data: {
+        full_name: name,
+      },
     },
   })
 

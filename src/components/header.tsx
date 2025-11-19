@@ -17,7 +17,7 @@ export async function Header() {
           {user ? (
             <>
               <span className="text-sm text-slate-600 dark:text-slate-400">
-                {user.email}
+                {user.user_metadata?.full_name || user.email}
               </span>
               <form action={signOut}>
                 <Button type="submit" variant="outline" size="sm">
