@@ -10,7 +10,7 @@ create table if not exists public.mottos (
 -- 2. Enable RLS (Safe to run multiple times)
 alter table public.mottos enable row level security;
 
--- 3. Create Policy safely (Drop first to ensure update, or use do block)
+-- 3. Create Policy safely (Check existence before creating)
 do $$
 begin
   if not exists (
