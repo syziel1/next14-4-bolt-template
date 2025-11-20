@@ -1,5 +1,8 @@
+/* postcss-ignore-next-line */
 @tailwind base;
+/* postcss-ignore-next-line */
 @tailwind components;
+/* postcss-ignore-next-line */
 @tailwind utilities;
 
 @layer utilities {
@@ -7,8 +10,6 @@
     text-wrap: balance;
   }
 }
-
-
 
 @layer base {
   :root {
@@ -70,9 +71,11 @@
 
 @layer base {
   * {
+    /* postcss-ignore-next-line */
     @apply border-border;
   }
   body {
+    /* postcss-ignore-next-line */
     @apply bg-background text-foreground;
   }
 }
