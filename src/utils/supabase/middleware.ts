@@ -20,8 +20,8 @@ export function createClient(request: NextRequest) {
   }
 
   const supabase = createServerClient(
-    supabaseUrl,
-    supabaseAnonKey,
+    supabaseUrl as string,
+    supabaseAnonKey as string,
     {
       cookies: {
         get(name: string) {

@@ -16,8 +16,8 @@ export async function createClient() {
   }
 
   return createServerClient(
-    supabaseUrl,
-    supabaseAnonKey,
+    supabaseUrl as string,
+    supabaseAnonKey as string,
     {
       cookies: {
         get(name: string) {

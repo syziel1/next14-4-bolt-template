@@ -5,10 +5,11 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const { supabase, response } = createClient(request)
 
+  // Get user once and reuse the result
+  const { data: { user } } = await supabase.auth.getUser()
+
   // Protect dashboard routes
   if (pathname.startsWith('/dashboard')) {
-    const { data: { user } } = await supabase.auth.getUser()
-
     if (!user) {
       const redirectUrl = new URL('/login', request.url)
       redirectUrl.searchParams.set('redirect', pathname)
@@ -18,8 +19,6 @@ export async function middleware(request: NextRequest) {
 
   // Redirect authenticated users away from auth pages
   if (pathname === '/login' || pathname === '/signup') {
-    const { data: { user } } = await supabase.auth.getUser()
-
     if (user) {
       return NextResponse.redirect(new URL('/dashboard', request.url))
     }
