@@ -55,10 +55,10 @@ export default async function Home() {
         {user ? (
           <>
             <h1 className="text-balance text-4xl font-bold sm:text-5xl">
-              Witaj, {user.user_metadata?.full_name || user.email?.split('@')[0]}! 👋
+              Welcome, {user.user_metadata?.full_name || user.email?.split('@')[0]}! 👋
             </h1>
             <h2 className="text-balance text-2xl font-semibold sm:text-3xl text-muted-foreground">
-              Miło Cię widzieć
+              Nice to see you
             </h2>
           </>
         ) : (
