@@ -110,7 +110,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key`}
         ) : (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Your today&apos;s motto:
+              Today&apos;s motto:
             </p>
             <ul className="space-y-3">
               
