@@ -1,12 +1,12 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@/utils/supabase/middleware'
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+  const { supabase, response } = createClient(request)
 
   // Protect dashboard routes
   if (pathname.startsWith('/dashboard')) {
-    const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
@@ -18,7 +18,6 @@ export async function middleware(request: NextRequest) {
 
   // Redirect authenticated users away from auth pages
   if (pathname === '/login' || pathname === '/signup') {
-    const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (user) {
@@ -26,7 +25,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next()
+  return response
 }
 
 export const config = {

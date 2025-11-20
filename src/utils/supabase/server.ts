@@ -1,10 +1,11 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
-export function createClient() {
+export async function createClient() {
+  const cookieStore = await cookies()
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   const missingVars = [];
   if (!supabaseUrl) missingVars.push('NEXT_PUBLIC_SUPABASE_URL');
   if (!supabaseAnonKey) missingVars.push('NEXT_PUBLIC_SUPABASE_ANON_KEY');
@@ -20,11 +21,11 @@ export function createClient() {
     {
       cookies: {
         get(name: string) {
-          return cookies().get(name)?.value
+          return cookieStore.get(name)?.value
         },
         set(name: string, value: string, options: CookieOptions) {
           try {
-            cookies().set({ name, value, ...options })
+            cookieStore.set({ name, value, ...options })
           } catch (error) {
             // Server Components can't modify cookies; cookie setting should be handled by Route Handlers or Server Actions.
             // Log error for debugging purposes while suppressing expected Server Component errors
@@ -35,7 +36,7 @@ export function createClient() {
         },
         remove(name: string, options: CookieOptions) {
           try {
-            cookies().delete({ name, ...options })
+            cookieStore.delete({ name, ...options })
           } catch (error) {
             // Server Components can't modify cookies; cookie removal should be handled by Route Handlers or Server Actions.
             // Log error for debugging purposes while suppressing expected Server Component errors
