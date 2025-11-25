@@ -16,31 +16,67 @@ export default async function Home() {
   let error: { message: string } | null = null;
   const isDev = process.env.NODE_ENV === 'development';
 
+  // Get user session
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Get a random motto from the database
   try {
-    const supabase = createClient();
-    const { data, error: queryError } = await supabase
+    // PostgREST does not allow functions inside order(). Instead we grab a count,
+    // pick a random offset, and fetch a single row ordered by a stable column.
+    const { count, error: countError } = await supabase
       .from("mottos")
-      .select("*")
-      .limit(3)
-      .returns<Motto[]>(); // <--- HERE we use the interface, fixing the linter error
-    mottos = data;
-    error = queryError;
+      .select("id", { count: "exact", head: true });
+
+    if (countError) throw countError;
+
+    if (!count || count === 0) {
+      mottos = [];
+    } else {
+      const randomIndex = Math.floor(Math.random() * count);
+      const { data, error: queryError } = await supabase
+        .from("mottos")
+        .select("*")
+        .order("id", { ascending: true })
+        .range(randomIndex, randomIndex)
+        .returns<Motto[]>(); // <--- HERE we use the interface, fixing the linter error
+
+      mottos = data;
+      error = queryError;
+    }
   } catch (e: unknown) {
     error = { message: e instanceof Error ? e.message : "Supabase client initialization failed." };
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-background px-6 text-center text-foreground">
+    <main className="flex min-h-screen flex-col items-center justify-between gap-6 bg-background px-6 py-8 text-center text-foreground">
+      <div className="flex-1 flex flex-col items-center justify-center gap-6 w-full">
       <div className="space-y-2">
-        <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
-          Supabase Connection Check
-        </p>
-        <h1 className="text-balance text-4xl font-bold sm:text-5xl">
-          Bolt.new template ready ⚡
-        </h1>
+        {user ? (
+          <>
+            <h1 className="text-balance text-4xl font-bold sm:text-5xl">
+              Welcome, {user.user_metadata?.full_name || user.email?.split('@')[0]}! 👋
+            </h1>
+            <h2 className="text-balance text-2xl font-semibold sm:text-3xl text-muted-foreground">
+              Nice to see you
+            </h2>
+          </>
+        ) : (
+          <>
+            <h1 className="text-balance text-4xl font-bold sm:text-5xl">
+              Next 14.x with Supabase template ⚡
+            </h1>
+            <h2 className="text-balance text-2xl font-semibold sm:text-3xl">
+              Also for Bolt.new projects
+            </h2>
+          </>
+        )}
       </div>
 
       <div className="mt-4 w-full max-w-md rounded-lg border bg-card p-6 shadow-sm text-left">
+        <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
+          Supabase Connection Check
+        </p>
         <h2 className="mb-4 text-lg font-semibold flex items-center gap-2">
           Database Status:
           {error ? (
@@ -57,11 +93,12 @@ export default async function Home() {
             {isDev ? (
               <>
                 <p className="mb-2 text-muted-foreground text-xs">
-                  You are in <strong>DEV</strong> mode. Make sure you have a <code className="bg-background px-1 py-0.5 rounded border">.env</code> file in the root directory:
+                  You are in <strong>DEV</strong> mode. Make sure you have
+                  an <code className="bg-background px-1 py-0.5 rounded border">.env</code> file in the root directory:
                 </p>
                 <pre className="p-3 bg-slate-950 text-slate-50 rounded-md overflow-x-auto text-xs font-mono">
-NEXT_PUBLIC_SUPABASE_URL=your-project-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+                  {`NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key`}
                 </pre>
               </>
             ) : (
@@ -73,7 +110,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
         ) : (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Recently added mottos:
+              Today&apos;s motto:
             </p>
             <ul className="space-y-3">
               
@@ -100,6 +137,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
         Start editing <code className="rounded bg-muted px-2 py-1">src/app/page.tsx</code> to make
         this project your own.
       </p>
+      </div>
+
+      <footer className="mt-8 text-sm text-muted-foreground">
+        <p>Created by syziel1</p>
+      </footer>
     </main>
   );
 }
